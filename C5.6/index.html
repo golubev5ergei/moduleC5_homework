@@ -1,0 +1,39 @@
+<html>
+    <head>
+      <title>2 Inputs App</title>
+    </head>
+    <body>
+       <h2>2 Inputs App</h2>
+       <input type="number" id="widthInput" />
+       <input type="number" id="heightInput" />
+       <button onclick="showImage()">Send request</button>
+       <div id="imageSpace"></div>
+       <script>
+        function showImage() {
+          let width = document.getElementById("widthInput").value;
+          let height = document.getElementById("heightInput").value;
+           if (width < 100 || width > 300 || height < 100 || height > 300) {
+            document.getElementById("imageSpace").innerHTML = "One of the numbers outside the range of 100 to 300";
+          }
+          else {
+            fetch("https://picsum.photos/" + width + "/" + height)
+              .then(function(response) {
+                if (response.status !== 200) {
+                  console.log("Status Code: " + response.status);
+                  return;
+                }
+                response.blob().then(function(data) {
+                  let objectURL = URL.createObjectURL(data);
+                  let img = document.createElement("img");
+                  img.src = objectURL;
+                   document.getElementById("imageSpace").appendChild(img);
+                });
+              })
+              .catch(function(err) {
+                console.log("Fetch Error", err);
+              });
+          }
+        }
+      </script>
+    </body>
+  </html>
