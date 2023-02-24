@@ -1,20 +1,43 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="index.css">
-    <title>Document</title>
-</head>
-<body>
-    <input type="text" name="input" placeholder="Input number 1-10">
-    
-    <button class="btn-request">Запрашиваем данные</button>
-
-    <div class="result">Здесь будет результат запроса</div>
-    
-    <script src="C5.3.js"></script>
-    
-</body>
+<html>
+  <head>
+    <title>Get Image App</title>
+    <script>
+      function getXhrData() {
+        const inputValue = document.querySelector('#inputNumber').value;
+        // check if value falls in 1 to 10 range
+        if (inputValue > 0 && inputValue < 11) {
+            // make request
+            let xhr = new XMLHttpRequest();
+            const url = `https://picsum.photos/v2/list?limit=${inputValue}`;
+             xhr.onreadystatechange = function() {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    let data = JSON.parse(xhr.responseText);
+                    // console.log(data);
+                    // display images
+                    let photosDiv = document.querySelector('#photos');
+                    for (const item of data) {
+                        let imgDiv = document.createElement('div');
+                        let img = document.createElement('img');
+                        img.src = item.download_url;
+                        img.width = 200;
+                        img.height = 150;
+                        imgDiv.appendChild(img);
+                        photosDiv.appendChild(imgDiv);
+                    }
+                 }
+            };
+             xhr.open("GET", url, true);
+            xhr.send();  
+        } else {
+            alert('Number out of range 1 to 10');
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <input type="text" id="inputNumber" placeholder="Input number 1-10">
+    <button onclick="getXhrData()">Send Request</button>
+    <div id="photos"></div>
+  </body>
 </html>
